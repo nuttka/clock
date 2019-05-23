@@ -28,6 +28,16 @@ function time(){
 
 time()
 
+setInterval(function() {
+  // after 1000ms, call the `setTimeout` callback
+  // In the meantime, continue executing code below
+  setInterval(function() {
+    time() //runs second after 1100ms
+  },0)
+
+  process.stdout.clearLine() //runs first, after 1000ms
+},1000)
+
 // setInterval(function(){
 //   time(),
 //   1000
