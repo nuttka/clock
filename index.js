@@ -1,9 +1,8 @@
 const readline = require('readline-sync')
 
 function start(){
-  const content = {}
 
-  content.searchTerm = askAndReturnSize()
+  content = askAndReturnSize()
 
   function askAndReturnSize(){
     return readline.question('Digite o tamanho do relogio (1 a 5): ')
@@ -12,14 +11,6 @@ function start(){
 }
 
 start()
-
-
-
-// var run = false
-// var prompts = readline.createInterface(process.stdin, process.stdout)
-// prompts.question("Qual o tamanho desejado? ", function(size){
-//   run = true
-// })
 
 function time(){
   today=new Date()
@@ -34,7 +25,9 @@ function time(){
   process.stdout.write(h+":"+m+":"+s)
   process.stdout.cursorTo(0)
 }
-// while(run){
+
+time()
+
 // setInterval(function(){
 //   time(),
 //   1000
