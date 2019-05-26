@@ -19,18 +19,7 @@ var linha2 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
 var size = 0
 
 function askAndReturnSize(){
-  return readline.question('Digite o tamanho do relogio (>1 [caso esteja desorganizado, amplie a janela]): ')
-}
-
-function start(){
-  size = askAndReturnSize()
-}
-
-while(size<1){
-  start()
-  if(size<1){
-    console.log("Valor nao permitido.")
-  }
+  return readline.question('Digite o tamanho do relogio (1 a 5): ')
 }
 
 function transform(){
@@ -170,10 +159,13 @@ function print(){
     clear()}
     , 987)
 }
+
 function clear(){
   process.stdout.write('\033c')
 }
 
-setInterval(function(){
-  print()},
-  987)
+module.exports = {
+  print,
+  transform,
+  askAndReturnSize
+}
