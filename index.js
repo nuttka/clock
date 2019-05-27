@@ -1,179 +1,265 @@
-const readline = require('readline-sync')
+const fetch = require('node-fetch');
+const readline = require('readline-sync');
 
+// functions and variables
+
+const time = 8; //tempo aproximado de execuçao, em ms
 const MAX_NUMBERS = 10;
-const matrix=[  ["_","|","|"," ","|","|","_"],   //0
-                [" "," ","|"," "," ","|"," "],   //1
-                ["_"," ","|","_","|"," ","_"],   //2
-                ["_"," ","|","_"," ","|","_"],   //3
-                [" ","|","|","_"," ","|"," "],   //4
-                ["_","|"," ","_"," ","|","_"],   //5
-                ["_","|"," ","_","|","|","_"],   //6
-                ["_"," ","|"," "," ","|"," "],   //7
-                ["_","|","|","_","|","|","_"],   //8
-                ["_","|","|","_"," ","|","_"]  ] //9
+const matrix = [  ["_","|","|"," ","|","|","_"],   //0
+                  [" "," ","|"," "," ","|"," "],   //1
+                  ["_"," ","|","_","|"," ","_"],   //2
+                  ["_"," ","|","_"," ","|","_"],   //3
+                  [" ","|","|","_"," ","|"," "],   //4
+                  ["_","|"," ","_"," ","|","_"],   //5
+                  ["_","|"," ","_","|","|","_"],   //6
+                  ["_"," ","|"," "," ","|"," "],   //7
+                  ["_","|","|","_","|","|","_"],   //8
+                  ["_","|","|","_"," ","|","_"]  ];//9
+var line0 = ["0", "1", "2", "3", "4", "5"];
+var line1 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
+var line2 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
+var size = 0;
+var str = "";
+var h = "";
+var m = "";
+var s = "";
+var apiTime = true;
 
-var linha0 = ["0", "1", "2", "3", "4", "5"]
-var linha1 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
-var linha2 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
+function aksAndReturnContinent(){
+  return readline.question("Where are you? Please, tell me first your continent: ");
+}
 
-var size = 0
+function aksAndReturnCountry(){
+  return readline.question("Now, tell me your country: ");
+}
 
 function askAndReturnSize(){
-  return readline.question('Digite o tamanho do relogio (>1 [caso esteja desorganizado, amplie a janela]): ')
+  return readline.question('Enter the size of the watch (positive numbers and, for better visualization, integers): ');
 }
 
 function start(){
-  size = askAndReturnSize()
+  continent = aksAndReturnContinent();
+  country = aksAndReturnCountry();
 }
 
-while(size<1){
-  start()
-  if(size<1){
-    console.log("Valor nao permitido.")
+function clock(){
+  s = s+1
+  if(s==60){
+    s = 0
+    m = m+1;
+  }
+  if(m==60){
+    m = 0;
+    h = h+1;
+  }
+  if(h==24){
+    h = 0;
+  }
+  h = (h<10) ? "0"+h : h;
+  m = (m<10) ? "0"+m : m;
+  s = (s<10) ? "0"+s : s;
+}
+
+function IPTime(){
+  today = new Date();
+  h = today.getHours();
+  m = today.getMinutes();
+  s = today.getSeconds();
+  h = (h<10) ? "0"+h : h;
+  m = (m<10) ? "0"+m : m;
+  s = (s<10) ? "0"+s : s;
+}
+
+function APITime(){
+  if(apiTime){
+  fetch('http://worldtimeapi.org/api/timezone/' + continent + '/' + country + '/')
+  .then(function(response){
+    return response.json(); // converts response to json
+  })
+  .then(function(data){
+    str = data.datetime.substr(11, 8);
+    h = str.substr(0,2);
+    m = str.substr(3,2);
+    s = str.substr(6,2);
+    return str;
+  })
+  .catch(function(){
+    setTimeout(function(){
+      console.log("Error: changing the localization for your IP.");
+      apiTime = false;
+    }, 5000);
+  });
   }
 }
 
-function transform(){
-  today=new Date()
-  h=today.getHours()
-  m=today.getMinutes()
-  s=today.getSeconds()
-  h = (h<10) ? "0"+h : h
-  m = (m<10) ? "0"+m : m
-  s = (s<10) ? "0"+s : s
+function getSize(){
+  size = askAndReturnSize();
+}
 
-  var numbers = [h.toString()[0], h.toString()[1], m.toString()[0], m.toString()[1], s.toString()[0], s.toString()[1]]
+function transform(){
+  if(!apiTime){
+    IPTime();
+  }else{
+    clock();
+  }
+  // h = str.substr(0,2);
+  // m = str.substr(3,2);
+  // s = str.substr(6,2);
+
+  // today = new Date();
+  // h = today.getHours();
+  // m = today.getMinutes();
+  // s = today.getSeconds();
+  // h = (h<10) ? "0"+h : h;
+  // m = (m<10) ? "0"+m : m;
+  // s = (s<10) ? "0"+s : s;
+
+  var numbers = [h.toString()[0], h.toString()[1], m.toString()[0], m.toString()[1], s.toString()[0], s.toString()[1]];
 
   for(z=0; z<numbers.length; z++){
     for(j=0; j<MAX_NUMBERS; j++){
-      if(numbers[z] == j){
+      if(numbers[z]==j){
         var i = z*3; // 3 é a quantidade de espaços de cada um dos 6 numeros
-        linha0[z] = matrix[j][0];
-        linha1[i] = matrix[j][1]; linha1[i+1] = matrix[j][3]; linha1[i+2] = matrix[j][2];
-        linha2[i] = matrix[j][4]; linha2[i+1] = matrix[j][6]; linha2[i+2] = matrix[j][5];
+        line0[z] = matrix[j][0];
+        line1[i] = matrix[j][1]; line1[i+1] = matrix[j][3]; line1[i+2] = matrix[j][2];
+        line2[i] = matrix[j][4]; line2[i+1] = matrix[j][6]; line2[i+2] = matrix[j][5];
       }
     }
   }
 }
 
 function print(){
-  transform()
+  transform();
 
-  //upperLine
-  var upperLine = " "
+  //topLine
+  var topLine = " ";
   for(x=0; x<6; x++){
     for(z=1; z<=size; z++){
-      upperLine = upperLine + linha0[x]
+      topLine = topLine + line0[x];
     }
-    upperLine = upperLine + "  "
+    topLine = topLine + "  ";
     for(y=1; y<=size; y++){
-      upperLine = upperLine + " "
+      topLine = topLine + " ";
     }
   }
-  upperLine = upperLine + "\n"
+  topLine = topLine + "\n";
 
-  //upMiddleLine
-  var upMiddleLine = ""
+  //topMiddleLine
+  var topMiddleLine = "";
   for(z=1; z<size; z++){
     for(x=0; x<18; x++){
-      if(x == 1 || x == 4 || x == 7 || x == 10 || x == 13 || x == 16){ // espaços que representam o '_'
+      if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
         for(y=1; y<=size; y++){
-          upMiddleLine = upMiddleLine + " "
+          topMiddleLine = topMiddleLine + " ";
         }
         continue;
       }
-      upMiddleLine = upMiddleLine + linha1[x]
-      if(x == 2 || x == 5 || x == 8 || x == 11 || x == 14){ // espaços que separam os numeros
+      topMiddleLine = topMiddleLine + line1[x];
+      if(x==2 || x==5 || x==8 || x==11 || x==14){ // espaços que separam os numeros
         for(y=1; y<=size; y++){
-          upMiddleLine = upMiddleLine + " "
+          topMiddleLine = topMiddleLine + " ";
         }
       }
     }
-    upMiddleLine = upMiddleLine + "\n"
+    topMiddleLine = topMiddleLine + "\n";
   }
 
   //middleLine
-  var middleLine = ""
+  var middleLine = "";
   for(x=0; x<18; x++){
-    if(x == 1 || x == 4 || x == 7 || x == 10 || x == 13 || x == 16){ // espaços que representam o '_'
+    if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
       for(y=1; y<=size; y++){
-        middleLine = middleLine + linha1[x]
+        middleLine = middleLine + line1[x];
       }
     }else{
-      middleLine = middleLine + linha1[x]
+      middleLine = middleLine + line1[x];
     }
-    if(x == 2 || x == 5 || x == 8 || x == 11 || x == 14){ // espaços que separam os numeros
+    if(x==2 || x==5 || x==8 || x==11 || x==14){ // espaços que separam os numeros
       for(y=1; y<=size; y++){
-        if(y == size && (x == 5 || x == 11)){ // bolinhas do tempo
-          middleLine = middleLine + "•"
+        if(y==size && (x==5 || x==11)){ // bolinhas do tempo
+          middleLine = middleLine + "•";
           continue;
         }
-        middleLine = middleLine + " "
+        middleLine = middleLine + " ";
       }
     }
   }
-  middleLine = middleLine + "\n"
+  middleLine = middleLine + "\n";
 
-  //downMiddleLine
-  var downMiddleLine = ""
+  //bottomMiddleLine
+  var bottomMiddleLine = "";
   for(z=1; z<size; z++){
     for(x=0; x<18; x++){
-      if(x == 1 || x == 4 || x == 7 || x == 10 || x == 13 || x == 16){ // espaços que representam o '_'
+      if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
         for(y=1; y<=size; y++){
-          downMiddleLine = downMiddleLine + " "
+          bottomMiddleLine = bottomMiddleLine + " ";
         }
         continue;
       }
-      downMiddleLine = downMiddleLine + linha2[x]
-      if(x == 2 || x == 5 || x == 8 || x == 11 || x == 14){ // espaços que separam os numeros
+      bottomMiddleLine = bottomMiddleLine + line2[x];
+      if(x==2 || x==5 || x==8 || x==11 || x==14){ // espaços que separam os numeros
         for(y=1; y<=size; y++){
-          if(y == size && z==1 && (x == 5 || x == 11)){ // bolinhas do tempo
-            downMiddleLine = downMiddleLine + "•"
+          if(y==size && z==1 && (x==5 || x==11)){ // bolinhas do tempo
+            bottomMiddleLine = bottomMiddleLine + "•";
             continue;
           }
-          downMiddleLine = downMiddleLine + " "
+          bottomMiddleLine = bottomMiddleLine + " ";
         }
       }
     }
-    downMiddleLine = downMiddleLine + "\n"
+    bottomMiddleLine = bottomMiddleLine + "\n";
   }
 
-  //downLine
-  var downLine = ""
+  //bottomLine
+  var bottomLine = "";
   for(x=0; x<18; x++){
-    if(x == 1 || x == 4 || x == 7 || x == 10 || x == 13 || x == 16){ // espaços que representam o '_'
+    if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
       for(y=1; y<=size; y++){
-        downLine = downLine + linha2[x]
+        bottomLine = bottomLine + line2[x];
       }
     }else{
-      downLine = downLine + linha2[x]
+      bottomLine = bottomLine + line2[x];
     }
-    if(x == 2 || x == 5 || x == 8 || x == 11 || x == 14){ // espaços que separam os numeros
+    if(x==2 || x==5 || x==8 || x==11 || x==14){ // espaços que separam os numeros
       for(y=1; y<=size; y++){
-        if(size == 1 && (x == 5 || x == 11)){ // bolinhas do tempo
-          downLine = downLine + "•"
+        if(size==1 && (x==5 || x==11)){ // bolinhas do tempo
+          bottomLine = bottomLine + "•";
           continue;
         }
-        downLine = downLine + " "
+        bottomLine = bottomLine + " ";
       }
     }
   }
-  downLine = downLine + "\n"
+  bottomLine = bottomLine + "\n";
 
-  process.stdout.write(upperLine)
-  process.stdout.write(upMiddleLine)
-  process.stdout.write(middleLine)
-  process.stdout.write(downMiddleLine)
-  process.stdout.write(downLine)
+  process.stdout.write("\n");
+  process.stdout.write(topLine);
+  process.stdout.write(topMiddleLine);
+  process.stdout.write(middleLine);
+  process.stdout.write(bottomMiddleLine);
+  process.stdout.write(bottomLine);
 
   setTimeout(function(){
-    clear()}
-    , 987)
+    clear();}
+    , 1000-time);
 }
+
 function clear(){
-  process.stdout.write('\033c')
+  console.clear();
+}
+
+// main
+
+start();
+
+while(size<1 || isNaN(size)){
+  getSize();
+  if(size>=1 && !isNaN(size)){
+    APITime();
+    console.clear();
+  }
 }
 
 setInterval(function(){
-  print()},
-  987)
+  print();},
+  1000-time);
