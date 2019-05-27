@@ -26,53 +26,63 @@ var s = "";
 var apiTime = true;
 
 function aksAndReturnContinent(){
-  return readline.question("Where are you? Please, tell me first your continent: ");
+  return readline.question("Where are you? Please, tell me first your continent [Europe, Asia, America, etc]: ");
 }
 
 function aksAndReturnCountry(){
-  return readline.question("Now, tell me your country: ");
+  return readline.question("Now, tell me your country [Paris, Brazil, London, New_York, etc]: ");
 }
 
 function askAndReturnSize(){
-  return readline.question('Enter the size of the watch (positive numbers and, for better visualization, integers): ');
+  return readline.question('Enter the size of the watch [positive numbers and, for better visualization, integers]: ');
 }
 
-function start(){
+function getLocation(){
+  console.clear();
   continent = aksAndReturnContinent();
   country = aksAndReturnCountry();
 }
 
 function clock(){
-  s = s+1
-  if(s==60){
-    s = 0
-    m = m+1;
+  if(apiTime){
+    s = s+1
+    if(s==60){
+      s = 0
+      m = m+1;
+    }
+    if(m==60){
+      m = 0;
+      h = h+1;
+    }
+    if(h==24){
+      h = 0;
+    }
+    h = (h<10) ? "0"+h : h;
+    m = (m<10) ? "0"+m : m;
+    s = (s<10) ? "0"+s : s;
+  }else if(!apiTime){
+    var today = new Date();
+    h = today.getHours();
+    m = today.getMinutes();
+    s = today.getSeconds();
+    h = (h<10) ? "0"+h : h;
+    m = (m<10) ? "0"+m : m;
+    s = (s<10) ? "0"+s : s;
   }
-  if(m==60){
-    m = 0;
-    h = h+1;
-  }
-  if(h==24){
-    h = 0;
-  }
-  h = (h<10) ? "0"+h : h;
-  m = (m<10) ? "0"+m : m;
-  s = (s<10) ? "0"+s : s;
 }
 
-function IPTime(){
-  today = new Date();
-  h = today.getHours();
-  m = today.getMinutes();
-  s = today.getSeconds();
-  h = (h<10) ? "0"+h : h;
-  m = (m<10) ? "0"+m : m;
-  s = (s<10) ? "0"+s : s;
-}
+// function IPTime(){
+//   today = new Date();
+//   h = today.getHours();
+//   m = today.getMinutes();
+//   s = today.getSeconds();
+//   h = (h<10) ? "0"+h : h;
+//   m = (m<10) ? "0"+m : m;
+//   s = (s<10) ? "0"+s : s;
+// }
 
 function APITime(){
-  if(apiTime){
-  fetch('http://worldtimeapi.org/api/timezone/' + continent + '/' + country + '/')
+  fetch('http://worldtimeapi.org/api/timezone/' + continent + '/' + country)
   .then(function(response){
     return response.json(); // converts response to json
   })
@@ -81,15 +91,11 @@ function APITime(){
     h = str.substr(0,2);
     m = str.substr(3,2);
     s = str.substr(6,2);
-    return str;
   })
   .catch(function(){
-    setTimeout(function(){
-      console.log("Error: changing the localization for your IP.");
-      apiTime = false;
-    }, 5000);
+    console.log("Error: changing the localization for your IP.");
+    apiTime = false;
   });
-  }
 }
 
 function getSize(){
@@ -97,10 +103,31 @@ function getSize(){
 }
 
 function transform(){
-  if(!apiTime){
-    IPTime();
-  }else{
-    clock();
+  // clock();
+  if(apiTime){
+    s = s+1
+    if(s==60){
+      s = 0
+      m = m+1;
+    }
+    if(m==60){
+      m = 0;
+      h = h+1;
+    }
+    if(h==24){
+      h = 0;
+    }
+    h = (h<10) ? "0"+h : h;
+    m = (m<10) ? "0"+m : m;
+    s = (s<10) ? "0"+s : s;
+  }else if(!apiTime){
+    var today = new Date();
+    h = today.getHours();
+    m = today.getMinutes();
+    s = today.getSeconds();
+    h = (h<10) ? "0"+h : h;
+    m = (m<10) ? "0"+m : m;
+    s = (s<10) ? "0"+s : s;
   }
   // h = str.substr(0,2);
   // m = str.substr(3,2);
@@ -250,7 +277,7 @@ function clear(){
 
 // main
 
-start();
+getLocation();
 
 while(size<1 || isNaN(size)){
   getSize();
