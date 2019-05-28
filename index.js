@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const readline = require('readline-sync');
 
-// functions and variables
+// variables
 
 const time = 8; //tempo aproximado de execuçao, em ms
 const MAX_NUMBERS = 10;
@@ -18,12 +18,17 @@ const matrix = [  ["_","|","|"," ","|","|","_"],   //0
 var line0 = ["0", "1", "2", "3", "4", "5"];
 var line1 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
 var line2 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
+
 var size = 0;
 var str = "";
 var h = "";
 var m = "";
 var s = "";
 var apiTime = true;
+var continent = "";
+var country = "";
+
+// functions input
 
 function aksAndReturnContinent(){
   return readline.question("Where are you? Please, tell me first your continent [Europe, Asia, America, etc]: ");
@@ -43,23 +48,30 @@ function getLocation(){
   country = aksAndReturnCountry();
 }
 
+function getSize(){
+  size = askAndReturnSize();
+}
+
+// functions clock
+
 function clock(){
   if(apiTime){
-    s = s+1
+    console.log(continent+": "+country);
+    s = Number(s)+1;
     if(s==60){
-      s = 0
-      m = m+1;
+      s = 0;
+      m = Number(m)+1;
     }
     if(m==60){
       m = 0;
-      h = h+1;
+      h = Number(h)+1;
     }
     if(h==24){
       h = 0;
     }
-    h = (h<10) ? "0"+h : h;
-    m = (m<10) ? "0"+m : m;
-    s = (s<10) ? "0"+s : s;
+    s = (s<10) ? "0"+Number(s) : s;
+    m = (m<10) ? "0"+Number(m) : m;
+    h = (h<10) ? "0"+Number(h) : h;
   }else if(!apiTime){
     var today = new Date();
     h = today.getHours();
@@ -70,16 +82,6 @@ function clock(){
     s = (s<10) ? "0"+s : s;
   }
 }
-
-// function IPTime(){
-//   today = new Date();
-//   h = today.getHours();
-//   m = today.getMinutes();
-//   s = today.getSeconds();
-//   h = (h<10) ? "0"+h : h;
-//   m = (m<10) ? "0"+m : m;
-//   s = (s<10) ? "0"+s : s;
-// }
 
 function APITime(){
   fetch('http://worldtimeapi.org/api/timezone/' + continent + '/' + country)
@@ -98,48 +100,8 @@ function APITime(){
   });
 }
 
-function getSize(){
-  size = askAndReturnSize();
-}
-
 function transform(){
-  // clock();
-  if(apiTime){
-    s = s+1
-    if(s==60){
-      s = 0
-      m = m+1;
-    }
-    if(m==60){
-      m = 0;
-      h = h+1;
-    }
-    if(h==24){
-      h = 0;
-    }
-    h = (h<10) ? "0"+h : h;
-    m = (m<10) ? "0"+m : m;
-    s = (s<10) ? "0"+s : s;
-  }else if(!apiTime){
-    var today = new Date();
-    h = today.getHours();
-    m = today.getMinutes();
-    s = today.getSeconds();
-    h = (h<10) ? "0"+h : h;
-    m = (m<10) ? "0"+m : m;
-    s = (s<10) ? "0"+s : s;
-  }
-  // h = str.substr(0,2);
-  // m = str.substr(3,2);
-  // s = str.substr(6,2);
-
-  // today = new Date();
-  // h = today.getHours();
-  // m = today.getMinutes();
-  // s = today.getSeconds();
-  // h = (h<10) ? "0"+h : h;
-  // m = (m<10) ? "0"+m : m;
-  // s = (s<10) ? "0"+s : s;
+  clock();
 
   var numbers = [h.toString()[0], h.toString()[1], m.toString()[0], m.toString()[1], s.toString()[0], s.toString()[1]];
 
@@ -267,12 +229,8 @@ function print(){
   process.stdout.write(bottomLine);
 
   setTimeout(function(){
-    clear();}
+    console.clear();}
     , 1000-time);
-}
-
-function clear(){
-  console.clear();
 }
 
 // main

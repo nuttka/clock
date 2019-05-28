@@ -1,16 +1,16 @@
 # Relógio Led
 
 ## Como utilizar
-  Para utilizá-lo, é necessário ter o node instalado em seu computador.
+  Gerei um executável utilizando o nexe. Caso queira executar por linha de comando ao invés de utilizar o .exe, é 
+necessário possuir o node.js instalado no computador.
   Descompacte o zip e, dentro do prompt, vá até a pasta. Dentro da pasta, digite, ainda no terminal, "node index.js".
   Para a entrada são permitidos números maiores ou iguais a 1 (maiores que 5 também. Para valores grandes, aumente a 
 janela do prompt de tamanho).
 
-Obs: Gostaria de ter separado as funções em um arquivo diferente, de modo a organizar mais o código, mas é a primeira vez 
-que uso node e fiquei perdido em relação a isso.
-
 
 ## Documentação
+  Utilizei os módulos readline-sync e o fetch. O primeiro para ler o input do usuário e o segundo para a implementação da 
+WorldTimeAPI.org.
   Para fazê-lo, criei uma matriz onde cada linha representa um numero (de 0 a 9), e cada coluna representa uma parte do 
 numero, como pode ser visto abaixo. 
 
