@@ -2,8 +2,8 @@ const fetch = require('node-fetch');
 const readline = require('readline-sync');
 
 // variables
-
 const time = 8; //tempo aproximado de execuçao, em ms
+
 const MAX_NUMBERS = 10;
 const matrix = [  ["_","|","|"," ","|","|","_"],   //0
                   [" "," ","|"," "," ","|"," "],   //1
@@ -29,17 +29,16 @@ var continent = "";
 var country = "";
 
 // functions input
-
 function aksAndReturnContinent(){
-  return readline.question("Where are you? Please, tell me first your continent [Europe, Asia, America, etc]: ");
+  return readline.question("Where are you? Please, tell me your continent [For example: Europe, Asia, America, etc]: ");
 }
 
 function aksAndReturnCountry(){
-  return readline.question("Now, tell me your country [Paris, Brazil, London, New_York, etc]: ");
+  return readline.question("Now, tell me your city [For example: Paris, Brazil, London, New_York, etc]: ");
 }
 
 function askAndReturnSize(){
-  return readline.question('Enter the size of the watch [positive numbers and, for better visualization, integers]: ');
+  return readline.question('Enter the size of the watch [positive numbers]: ');
 }
 
 function getLocation(){
@@ -53,10 +52,9 @@ function getSize(){
 }
 
 // functions clock
-
 function clock(){
   if(apiTime){
-    console.log(continent+": "+country);
+    console.log(" " + continent+": "+country);
     s = Number(s)+1;
     if(s==60){
       s = 0;
@@ -95,7 +93,7 @@ function APITime(){
     s = str.substr(6,2);
   })
   .catch(function(){
-    console.log("Error: changing the localization for your IP.");
+    console.log("Error: Changing the location for your IP.");
     apiTime = false;
   });
 }
@@ -136,7 +134,7 @@ function print(){
   //topMiddleLine
   var topMiddleLine = "";
   for(z=1; z<size; z++){
-    for(x=0; x<18; x++){
+    for(x=0; x<line1.length; x++){
       if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
         for(y=1; y<=size; y++){
           topMiddleLine = topMiddleLine + " ";
@@ -155,7 +153,7 @@ function print(){
 
   //middleLine
   var middleLine = "";
-  for(x=0; x<18; x++){
+  for(x=0; x<line1.length; x++){
     if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
       for(y=1; y<=size; y++){
         middleLine = middleLine + line1[x];
@@ -178,7 +176,7 @@ function print(){
   //bottomMiddleLine
   var bottomMiddleLine = "";
   for(z=1; z<size; z++){
-    for(x=0; x<18; x++){
+    for(x=0; x<line2.length; x++){
       if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
         for(y=1; y<=size; y++){
           bottomMiddleLine = bottomMiddleLine + " ";
@@ -201,7 +199,7 @@ function print(){
 
   //bottomLine
   var bottomLine = "";
-  for(x=0; x<18; x++){
+  for(x=0; x<line2.length; x++){
     if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
       for(y=1; y<=size; y++){
         bottomLine = bottomLine + line2[x];
@@ -234,11 +232,11 @@ function print(){
 }
 
 // main
-
 getLocation();
 
 while(size<1 || isNaN(size)){
   getSize();
+  size = parseInt(size, 10);
   if(size>=1 && !isNaN(size)){
     APITime();
     console.clear();
