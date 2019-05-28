@@ -1,9 +1,9 @@
 const fetch = require('node-fetch');
 const readline = require('readline-sync');
 
-// functions and variables
-
+// variables
 const time = 8; //tempo aproximado de execuçao, em ms
+
 const MAX_NUMBERS = 10;
 const matrix = [  ["_","|","|"," ","|","|","_"],   //0
                   [" "," ","|"," "," ","|"," "],   //1
@@ -18,61 +18,71 @@ const matrix = [  ["_","|","|"," ","|","|","_"],   //0
 var line0 = ["0", "1", "2", "3", "4", "5"];
 var line1 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
 var line2 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
+
 var size = 0;
 var str = "";
 var h = "";
 var m = "";
 var s = "";
 var apiTime = true;
+var continent = "";
+var country = "";
 
+// functions input
 function aksAndReturnContinent(){
-  return readline.question("Where are you? Please, tell me first your continent: ");
+  return readline.question("Where are you? Please, tell me your continent [For example: Europe, Asia, America, etc]: ");
 }
 
 function aksAndReturnCountry(){
-  return readline.question("Now, tell me your country: ");
+  return readline.question("Now, tell me your city [For example: Paris, Brazil, London, New_York, etc]: ");
 }
 
 function askAndReturnSize(){
-  return readline.question('Enter the size of the watch (positive numbers and, for better visualization, integers): ');
+  return readline.question('Enter the size of the watch [positive numbers]: ');
 }
 
-function start(){
+function getLocation(){
+  console.clear();
   continent = aksAndReturnContinent();
   country = aksAndReturnCountry();
 }
 
-function clock(){
-  s = s+1
-  if(s==60){
-    s = 0
-    m = m+1;
-  }
-  if(m==60){
-    m = 0;
-    h = h+1;
-  }
-  if(h==24){
-    h = 0;
-  }
-  h = (h<10) ? "0"+h : h;
-  m = (m<10) ? "0"+m : m;
-  s = (s<10) ? "0"+s : s;
+function getSize(){
+  size = askAndReturnSize();
 }
 
-function IPTime(){
-  today = new Date();
-  h = today.getHours();
-  m = today.getMinutes();
-  s = today.getSeconds();
-  h = (h<10) ? "0"+h : h;
-  m = (m<10) ? "0"+m : m;
-  s = (s<10) ? "0"+s : s;
+// functions clock
+function clock(){
+  if(apiTime){
+    console.log(" " + continent+": "+country);
+    s = Number(s)+1;
+    if(s==60){
+      s = 0;
+      m = Number(m)+1;
+    }
+    if(m==60){
+      m = 0;
+      h = Number(h)+1;
+    }
+    if(h==24){
+      h = 0;
+    }
+    s = (s<10) ? "0"+Number(s) : s;
+    m = (m<10) ? "0"+Number(m) : m;
+    h = (h<10) ? "0"+Number(h) : h;
+  }else if(!apiTime){
+    var today = new Date();
+    h = today.getHours();
+    m = today.getMinutes();
+    s = today.getSeconds();
+    h = (h<10) ? "0"+h : h;
+    m = (m<10) ? "0"+m : m;
+    s = (s<10) ? "0"+s : s;
+  }
 }
 
 function APITime(){
-  if(apiTime){
-  fetch('http://worldtimeapi.org/api/timezone/' + continent + '/' + country + '/')
+  fetch('http://worldtimeapi.org/api/timezone/' + continent + '/' + country)
   .then(function(response){
     return response.json(); // converts response to json
   })
@@ -81,38 +91,15 @@ function APITime(){
     h = str.substr(0,2);
     m = str.substr(3,2);
     s = str.substr(6,2);
-    return str;
   })
   .catch(function(){
-    setTimeout(function(){
-      console.log("Error: changing the localization for your IP.");
-      apiTime = false;
-    }, 5000);
+    console.log("Error: Changing the location for your IP.");
+    apiTime = false;
   });
-  }
-}
-
-function getSize(){
-  size = askAndReturnSize();
 }
 
 function transform(){
-  if(!apiTime){
-    IPTime();
-  }else{
-    clock();
-  }
-  // h = str.substr(0,2);
-  // m = str.substr(3,2);
-  // s = str.substr(6,2);
-
-  // today = new Date();
-  // h = today.getHours();
-  // m = today.getMinutes();
-  // s = today.getSeconds();
-  // h = (h<10) ? "0"+h : h;
-  // m = (m<10) ? "0"+m : m;
-  // s = (s<10) ? "0"+s : s;
+  clock();
 
   var numbers = [h.toString()[0], h.toString()[1], m.toString()[0], m.toString()[1], s.toString()[0], s.toString()[1]];
 
@@ -147,7 +134,7 @@ function print(){
   //topMiddleLine
   var topMiddleLine = "";
   for(z=1; z<size; z++){
-    for(x=0; x<18; x++){
+    for(x=0; x<line1.length; x++){
       if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
         for(y=1; y<=size; y++){
           topMiddleLine = topMiddleLine + " ";
@@ -166,7 +153,7 @@ function print(){
 
   //middleLine
   var middleLine = "";
-  for(x=0; x<18; x++){
+  for(x=0; x<line1.length; x++){
     if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
       for(y=1; y<=size; y++){
         middleLine = middleLine + line1[x];
@@ -189,7 +176,7 @@ function print(){
   //bottomMiddleLine
   var bottomMiddleLine = "";
   for(z=1; z<size; z++){
-    for(x=0; x<18; x++){
+    for(x=0; x<line2.length; x++){
       if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
         for(y=1; y<=size; y++){
           bottomMiddleLine = bottomMiddleLine + " ";
@@ -212,7 +199,7 @@ function print(){
 
   //bottomLine
   var bottomLine = "";
-  for(x=0; x<18; x++){
+  for(x=0; x<line2.length; x++){
     if(x==1 || x==4 || x==7 || x==10 || x==13 || x==16){ // espaços que representam o '_'
       for(y=1; y<=size; y++){
         bottomLine = bottomLine + line2[x];
@@ -240,20 +227,16 @@ function print(){
   process.stdout.write(bottomLine);
 
   setTimeout(function(){
-    clear();}
+    console.clear();}
     , 1000-time);
 }
 
-function clear(){
-  console.clear();
-}
-
 // main
-
-start();
+getLocation();
 
 while(size<1 || isNaN(size)){
   getSize();
+  size = parseInt(size, 10);
   if(size>=1 && !isNaN(size)){
     APITime();
     console.clear();
