@@ -246,3 +246,20 @@ while(size<1 || isNaN(size)){
 setInterval(function(){
   print();},
   1000-time);
+
+  
+// function readKey(){
+//   var stdin = process.stdin;
+//   stdin.setRawMode(true);
+//   stdin.resume();
+//   stdin.setEncoding('utf8');
+//   stdin.on('data', function(key){
+//     if (key==='q') {
+//       process.exit();
+//     }
+//     if(key==='r'){
+//       size = 0;
+//       start();
+//     }
+//   });
+// }
