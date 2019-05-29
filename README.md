@@ -5,7 +5,7 @@
   Descompacte o zip e, dentro do prompt, vá até a pasta. Dentro da pasta, digite, ainda no terminal, "node index.js".
   Deixei tudo dentro do mesmo arquivo pois considerei que a linearidade permitia melhor vizualização do código como um todo.
   Dentro do programa, estou utilizando a API indicada por vocês. Dessa forma, informe o continente e o país, em inglês. Caso o formato entre incorretamente ou a API não responda, uso o horário do seu computador.
-  Depois disso, informe o tamanho do relógio, sendo aceito qualquer número maior ou igual a 1. Lembre-se que, para números grandes, caso o tamanho da janela do prompt seja inferior ao output, o output sairá desconfigurado. Ademais, caso o número colocado seja float, eu utilizo apenas a parte inteira dele. Para fechar, bastar apertar Ctrl+c.
+  Depois disso, informe o tamanho do relógio, sendo aceito qualquer número maior ou igual a 1. Lembre-se que, para números grandes, caso o tamanho da janela do prompt seja inferior ao output, o output sairá desconfigurado. Ademais, caso o número colocado seja float, eu utilizo apenas a parte inteira dele. Para fechar, bastar apertar 'Ctrl+c'.
 
 
 ## Documentação
@@ -30,3 +30,6 @@
   Para a topMiddleLine, pego a line1[0] e line1[2], onde está os '|'. A partir disso, crio novas linhas alinhando-os e mantendo o espaçamento necessário.
   Para a middleLine, pego a line1[0],[1] e [2], onde estão os '|' e os '_'. Desse modo, crio a linha do 'meio', adaptando os espaços para cada tamanho. Ademais, adapto para colocar a '•' para separar H/M/S.
   Para a bottomMiddleLine, faço a mesma coisa da topMiddleLine utilizando a line2, adaptando para colocar a '•' para separar H/M/S e, para a bottomLine, faço a mesma coisa da middleLine mas utilizando a line2.
+
+## Observações 
+  Eu aproveitei essa etapa para aprender node e fazer tal atividade usando-o. Logo, como estava em etapa de aprendizado com o tempo um pouco apertado (devido, principalmente, à faculdade), quero deixar claro que não tenho total certeza se cometi maus hábitos ou não em relação ao node e ao javascript. Gostaria de, por exemplo, separar as funções em mais arquivos de modo a deixar o código mais limpo, mas tudo o que fiz utilizando o 'module.exports' deu errado.
